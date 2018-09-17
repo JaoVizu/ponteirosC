@@ -4,7 +4,7 @@
 int foo(int *n){
   *n += 5;
 }
-int ordenaVetor(int vetor[], int tamanho);
+int ordenaVetor(char or,int vetor[], int tamanho);
 
 int main(){
   int *numeros,op, maximoA = 2;
@@ -22,7 +22,9 @@ int main(){
     scanf("%d", &op);
     switch(op){
       case 0:
-        printf("Saindo\n");
+        printf("Saindo...\n");
+        Sleep(500);
+        printf("Obrigado por utilizar!!\n");
         break;
       case 1:
           system("cls || clear");
@@ -32,8 +34,9 @@ int main(){
             contN++;
             printf("Numero cadastrado com sucesso!!\n");
           }else{
-            int *aux = numeros, novoTamanho = maximoA + 2;
-            numeros = (int*) malloc(maximoA * sizeof(int));
+            int *aux = numeros;
+            int novoTamanho = maximoA + 10;
+            numeros = (int*) malloc(novoTamanho * sizeof(int));
             if(!numeros){
               printf("Erro na alocacao de memoria!!\n");
               return 1;
@@ -54,7 +57,12 @@ int main(){
           /*for(x=0; x<contN; x++){
             printf("Numero %d : %d\n", x+1, numeros[x]);
           }*/
-          ordenaVetor(numeros,contN);
+          char or;
+          printf("Deseja ordenar o vetor em ordem crescente(PRESS C) ou deseja ordenar em ordem decrescente(PRESS D): ");
+          scanf(" %c", &or);
+          printf("Ordenando...\n");
+          Sleep(800);
+          ordenaVetor(or,numeros,contN);
         break;
 
       default:
@@ -65,18 +73,30 @@ int main(){
   return 0;
 }
 
-int ordenaVetor(int vetor[], int tamanho){
+int ordenaVetor(char or,int vetor[], int tamanho){
   int x,y, aux;
-  for(x=0; x<tamanho; x++){
-    for(y=x+1; y<tamanho; y++){
-        if(vetor[x] > vetor[y]){
+  if(or == 'c'){
+    for(x=0; x<tamanho; x++){
+      for(y=x+1; y<tamanho; y++){
+          if(vetor[x] > vetor[y]){
+            aux = vetor[x];
+            vetor[x] = vetor[y];
+            vetor[y] = aux;
+          }
+      }
+    }
+  }else{
+    for(x=0; x<tamanho; x++){
+      for(y=x+1; y<tamanho; y++){
+        if(vetor[x] < vetor[y]){
           aux = vetor[x];
           vetor[x] = vetor[y];
           vetor[y] = aux;
         }
+      }
     }
   }
 
-  for(x=0; x<tamanho; x++) printf("%d\n", vetor[x]);00
+  for(x=0; x<tamanho; x++) printf("%d\n", vetor[x]);
   return 0;
 }
