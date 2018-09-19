@@ -56,7 +56,7 @@ void recebeValor(Produto *produto, int *iCont){
   fgets(produto[*iCont].nome, sizeof(produto[*iCont].nome), stdin);
   printf("Digite o valor do produto: ");
   scanf("%f", &produto[*iCont].valor);
-  *iCont = *iCont + 1; //nao pode usar ++
+  //*iCont = *iCont + 1; //nao pode usar ++
 }
 
 //CADASTRA OS PRODUTOS
@@ -78,6 +78,7 @@ int cadastraProduto()
       printf("Deseja cadastrar mais um produto? (s/n)");
       scanf(" %c", &cEscolha);
       flush_in();
+      iCont = iCont + 1;
     }else{
       int iNovoMaximo = iMaximo + 100, x;
       //variavel tipo produto auxiliar
@@ -99,6 +100,7 @@ int cadastraProduto()
       printf("Deseja cadastrar mais um produto? (s/n)");
       scanf(" %c", &cEscolha);
       flush_in();
+      iCont = iCont + 1;
     }
   } while (cEscolha != 'n');
 
