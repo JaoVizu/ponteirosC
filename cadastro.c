@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAXIMO 1200
+#define MAXIMO 1500
 typedef struct produto
 {
   char nome[101];
