@@ -1,17 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAXIMO 1500
+#define MAXIMO 100
 typedef struct produto
 {
   char nome[101];
   float valor;
 } Produto;
-
-typedef struct aux {
-  char cNome[101];
-  float fValor;
-} Aux;
 
 int menu();
 void flush_in();
@@ -85,7 +80,8 @@ int cadastraProduto()
       flush_in();
     }else{
       int iNovoMaximo = iMaximo + 100, x;
-      Aux *aux = (Aux *)malloc(iNovoMaximo * sizeof(Aux));
+      //variavel tipo produto auxiliar
+      Produto *aux = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
       Produto *produto = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
       aux = produto;
       if (!produto && !aux)
@@ -95,7 +91,7 @@ int cadastraProduto()
       };
       for (x = 0; x < iCont; x++)
       {
-        *produto[x].nome = aux[x].cNome;
+        *produto[x].nome = *aux[x].nome;
       }
       free(aux);
       iMaximo = iNovoMaximo;
