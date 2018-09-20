@@ -7,10 +7,17 @@ typedef struct produto
 	float valor;
 } Produto;
 
+typedef struct fornecedor{
+	char nomeFantasia[101];
+	char endereco[101];
+} Fornecedor;
+
 int menu();
 void flush_in();
 void recebeValor(Produto *produto, int *iCont);
+char escolha(char *nome);
 int cadastraProduto();
+int cadastroFornecedor();
 int mostraProduto(Produto *produto, int *contador);
 
 int main()
@@ -39,6 +46,7 @@ int menu()
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
 		cadastraProduto();
+		//cadastroFornecedor();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -50,7 +58,7 @@ int menu()
 		printf("\n Opcao invalida...\n");
 	}
 }
-
+	/******************* FUNCOES PARA CADASTRO DE PRODUTOS ********************/
 //recebe valor dos produtos
 void recebeValor(Produto *produto, int *iCont)
 {
@@ -65,7 +73,7 @@ int cadastraProduto()
 {
 	//v. auxiliares
 	int iCont = 0, iMaximo = 100;
-	char cEscolha;
+	char retorno;
 	Produto *produto = (Produto *)malloc(iMaximo * sizeof(Produto));
 	if (!produto)
 	{
@@ -78,9 +86,7 @@ int cadastraProduto()
 		if (iCont < iMaximo)
 		{
 			recebeValor(produto, &iCont);
-			printf("Deseja cadastrar mais um produto? (s/n)");
-			scanf(" %c", &cEscolha);
-			printf("\n");
+			retorno = escolha("produto");
 			iCont++;
 			flush_in();
 		}
@@ -103,13 +109,12 @@ int cadastraProduto()
 			free(aux);
 			iMaximo = iNovoMaximo;
 			recebeValor(produto, &iCont);
-			printf("Deseja cadastrar mais um produto? (s/n)");
-			scanf(" %c", &cEscolha);
-			printf("\n");
+			retorno = escolha("produto");
 			flush_in();
 			iCont++;
 		}
-	} while (cEscolha != 'n');
+		
+	} while (retorno != 'n');
 	mostraProduto(produto, &iCont);
 }
 
@@ -126,9 +131,49 @@ int mostraProduto(Produto *produto, int *contador)
 	}
 }
 
+/******************* FUNCOES PARA CADASTRO DE FORNECEDOR ********************/
+
+void recebeValorForn(Fornecedor *fornecedor, int *contador){
+	printf("Digite o nome do Fornecedor: ");
+	fgets(fornecedor[*contador].nomeFantasia, sizeof(fornecedor[*contador].nomeFantasia), stdin);
+	printf("Digite o endereco do fornecedor: ");
+	fgets(fornecedor[*contador].endereco, sizeof(fornecedor[*contador].endereco), stdin);
+	flush_in();
+}
+
+int cadastroFornecedor(){
+	int iContF = 0;
+	int iMaximo = 2;
+	char retorno;
+
+	//fazer variavel do tipo fornecedor
+	Fornecedor *fornecedor = (Fornecedor*) malloc(iMaximo * sizeof(Fornecedor));
+
+	do{
+		//se ultrapassar o limite maximo de cadastro, ira alocar dinamico
+		if(iContF < iMaximo){
+			//recebeValorForn(fornecedor, iContF);
+			retorno = escolha("fornecedor");
+		
+			
+		}else{
+			retorno = escolha("fornecedor");
+		}
+	}while(retorno != 'n');
+
+}
+
+
+char escolha(char *nome){
+	char cEscolha;
+	printf("Deseja cadastrar mais um %s? (s/n)", nome);
+	scanf(" %c", &cEscolha);
+	printf("\n");
+	return cEscolha;
+}
+
 //Limpa buffer do teclado
-void flush_in()
-{
+void flush_in(){
 	int ch;
 	while ((ch = fgetc(stdin)) != EOF && ch != '\n'){}
 }
