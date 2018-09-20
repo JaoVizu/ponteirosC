@@ -70,9 +70,10 @@ int menu()
 	case 1:
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
-		//cadastroProduto();
+		cadastroProduto();
 		//cadastroFornecedor();
-		cadastroCliente();
+		//cadastroCliente();
+		//cadastroFuncionario();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -168,7 +169,7 @@ void recebeValorForn(Fornecedor *fornecedor, int *contador){
 
 int cadastroFornecedor(){
 	int iContF = 0;
-	int iMaximo = 2;
+	int iMaximo = 100;
 	int x;
 	char retorno;
 
@@ -232,7 +233,7 @@ void recebeValorCli(Cliente *cliente, int *contador){
 
 int cadastroCliente(){
 	int iContCli = 0;
-	int iMaximo = 2;
+	int iMaximo = 100;
 	int x;
 	char retorno;
 
@@ -285,14 +286,14 @@ int mostraCliente(Cliente *cliente, int *contador){
 	/******************* FUNCOES PARA CADASTRO DE CLIENTE ********************/
 void recebeValorFunc(Funcionario *funcionario, int *contador){
 	printf("Entre com o nome do funcionario: ");
-	fgets(funcionario[*contador].nomeFunc, sizeof(funcionario[*contador].nomeFunc, stdin));
+	fgets(funcionario[*contador].nomeFunc, sizeof(funcionario[*contador].nomeFunc), stdin);
 	printf("Entre com o cargo do funcionario: ");
 	fgets(funcionario[*contador].cargo, sizeof(funcionario[*contador].cargo), stdin);
 }
 
 int cadastroFuncionario(){
 	int iContFunc = 0;
-	int iMaximo  = 2;
+	int iMaximo  = 100;
 	int x;
 	char retorno;
 	//variavel do tipo funcionario
@@ -329,6 +330,7 @@ int cadastroFuncionario(){
 			flush_in();
 		}
 	}while(retorno != 'n');
+	mostraFuncionario(funcionario, &iContFunc);
 }
 
 int mostraFuncionario(Funcionario *funcionario, int *contador){
