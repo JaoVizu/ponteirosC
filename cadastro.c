@@ -17,22 +17,30 @@ typedef struct cliente{
 	char cpf[15];
 } Cliente;
 
+typedef struct funcionario{
+	char nomeFunc[101];
+	char cargo[101];
+} Funcionario;
+
 int menu();
 
 /** voids **/
 void recebeValorProd(Produto *produto, int *iCont);
 void recebeValorForn(Fornecedor *fornecedor, int *contador);
 void recebeValorCli(Cliente *cliente, int *contador);
+void recebeValorFunc(Funcionario *funcionario, int *contador);
 
 /** cadastro **/
 int cadastroProduto();
 int cadastroFornecedor();
 int cadastroCliente();
+int cadastroFuncionario();
 
 /** visualizacao de dados **/
 int mostraProduto(Produto *produto, int *contador);
 int mostraFornecedor(Fornecedor *fornecedor, int *contador);
 int mostraCliente(Cliente *cliente, int *contador);
+int mostraFuncionario(Funcionario *funcionario, int *contador);
 
 /** auxiliares **/
 char escolha(char *nome);
@@ -95,7 +103,7 @@ int cadastroProduto()
 	Produto *produto = (Produto *)malloc(iMaximo * sizeof(Produto));
 	if (!produto)
 	{
-		printf("Erro ao alocar memoria!!!\n");
+		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 		return 1;
 	}
 
@@ -114,7 +122,7 @@ int cadastroProduto()
 			int x;
 			Produto *aux = produto;
 			produto = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
-			if (!produto && !aux)
+			if (!produto)
 			{
 				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 				return 1;
@@ -166,6 +174,10 @@ int cadastroFornecedor(){
 
 	//fazer variavel do tipo fornecedor
 	Fornecedor *fornecedor = (Fornecedor*) malloc(iMaximo * sizeof(Fornecedor));
+	if(!fornecedor){
+		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+		return 1;
+	}
 
 	do{
 		//se ultrapassar o limite maximo de cadastro, ira alocar dinamico
@@ -178,6 +190,10 @@ int cadastroFornecedor(){
 			Fornecedor *aux = fornecedor;
 			int iNovoMaximo = iMaximo + 100;
 			fornecedor = (Fornecedor*) malloc(iNovoMaximo * sizeof(Fornecedor));
+			if(!fornecedor){
+				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+				return 1;
+			}
 			for(x=0; x<iContF; x++){
 				strcpy(fornecedor[x].nomeFantasia, aux[x].nomeFantasia);
 				strcpy(fornecedor[x].endereco, aux[x].endereco);
@@ -205,7 +221,7 @@ int mostraFornecedor(Fornecedor *fornecedor, int *contador){
 	}
 }
 
-/******************* FUNCOES PARA CADASTRO DE CLIENTE ********************/
+	/******************* FUNCOES PARA CADASTRO DE CLIENTE ********************/
 
 void recebeValorCli(Cliente *cliente, int *contador){
 	printf("Digite o nome do cliente: ");
@@ -221,6 +237,10 @@ int cadastroCliente(){
 	char retorno;
 
 	Cliente *cliente = (Cliente*) malloc(iMaximo * sizeof(Cliente));
+	if(!cliente){
+		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+		return 1;
+	}
 
 	do{
 		if(iContCli < iMaximo){
@@ -232,6 +252,10 @@ int cadastroCliente(){
 			Cliente *aux = cliente;
 			int iNovoMaximo = iMaximo + 100;
 			cliente = (Cliente*) malloc(iNovoMaximo * sizeof(Cliente*));
+			if(!cliente){
+				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+				return 1;
+			}
 			for(x=0; x<iContCli; x++){
 				strcpy(cliente[x].nomeCli, aux[x].nomeCli);
 				strcpy(cliente[x].cpf, aux[x].cpf);
@@ -255,6 +279,66 @@ int mostraCliente(Cliente *cliente, int *contador){
 		cliente[x].nomeCli[strcspn(cliente[x].nomeCli, "\n")] = '\0';
 		cliente[x].cpf[strcspn(cliente[x].cpf, "\n")] = '\0';
 		printf("Nome Cliente: %s \t\t CPF: %s\n", cliente[x].nomeCli, cliente[x].cpf);
+	}
+}
+
+	/******************* FUNCOES PARA CADASTRO DE CLIENTE ********************/
+void recebeValorFunc(Funcionario *funcionario, int *contador){
+	printf("Entre com o nome do funcionario: ");
+	fgets(funcionario[*contador].nomeFunc, sizeof(funcionario[*contador].nomeFunc, stdin));
+	printf("Entre com o cargo do funcionario: ");
+	fgets(funcionario[*contador].cargo, sizeof(funcionario[*contador].cargo), stdin);
+}
+
+int cadastroFuncionario(){
+	int iContFunc = 0;
+	int iMaximo  = 2;
+	int x;
+	char retorno;
+	//variavel do tipo funcionario
+	Funcionario *funcionario = (Funcionario*) malloc(iMaximo * sizeof(Funcionario));
+	if(!funcionario){
+		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+		return 1;
+	}
+
+	do{
+		if(iContFunc < iMaximo){
+			recebeValorFunc(funcionario, &iContFunc);
+			retorno = escolha("funcionario");
+			iContFunc++;
+			flush_in();
+		}else{
+			Funcionario *aux = funcionario;
+			int iNovoMaximo = iMaximo + 100;
+			funcionario = (Funcionario*) malloc(iNovoMaximo * sizeof(Funcionario));
+			if(!funcionario){
+				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+				return 1;
+			}
+			for(x=0; x<iContFunc; x++){
+				strcpy(funcionario[x].nomeFunc, aux[x].nomeFunc);
+				strcpy(funcionario[x].cargo, aux[x].cargo);
+			}
+			//libera da memoria
+			free(aux);
+			iMaximo = iNovoMaximo;
+			recebeValorFunc(funcionario, &iContFunc);
+			retorno = escolha("funcionario");
+			iContFunc++;
+			flush_in();
+		}
+	}while(retorno != 'n');
+}
+
+int mostraFuncionario(Funcionario *funcionario, int *contador){
+	int x;
+	printf("\n\t********** FUNCIONARIOS **********\n");
+	for(x = 0; x<*contador; x++){
+		//retirar o \n do final e adiciona o caracter nulo
+		funcionario[x].nomeFunc[strcspn(funcionario[x].nomeFunc, "\n")] = '\0';
+		funcionario[x].cargo[strcspn(funcionario[x].cargo, "\n")] = '\0';
+		printf("Nome Funcionario: %s \t Cargo: %s\n", funcionario[x].nomeFunc, funcionario[x].cargo);
 	}
 }
 
