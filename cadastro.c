@@ -19,6 +19,7 @@ char escolha(char *nome);
 int cadastraProduto();
 int cadastroFornecedor();
 int mostraProduto(Produto *produto, int *contador);
+int mostraFornecedor(Fornecedor *fornecedor, int *contador);
 
 int main()
 {
@@ -41,12 +42,11 @@ int menu()
 
 	switch (menu)
 	{
-
 	case 1:
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
-		cadastraProduto();
-		//cadastroFornecedor();
+		//cadastraProduto();
+		cadastroFornecedor();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -138,12 +138,12 @@ void recebeValorForn(Fornecedor *fornecedor, int *contador){
 	fgets(fornecedor[*contador].nomeFantasia, sizeof(fornecedor[*contador].nomeFantasia), stdin);
 	printf("Digite o endereco do fornecedor: ");
 	fgets(fornecedor[*contador].endereco, sizeof(fornecedor[*contador].endereco), stdin);
-	flush_in();
 }
 
 int cadastroFornecedor(){
 	int iContF = 0;
 	int iMaximo = 2;
+	int x;
 	char retorno;
 
 	//fazer variavel do tipo fornecedor
@@ -152,17 +152,40 @@ int cadastroFornecedor(){
 	do{
 		//se ultrapassar o limite maximo de cadastro, ira alocar dinamico
 		if(iContF < iMaximo){
-			//recebeValorForn(fornecedor, iContF);
+			recebeValorForn(fornecedor, &iContF);
 			retorno = escolha("fornecedor");
-		
-			
+			iContF++;
+			flush_in();
 		}else{
+			Fornecedor *aux = fornecedor;
+			int iNovoMaximo = iMaximo + 100;
+			fornecedor = (Fornecedor*) malloc(iNovoMaximo * sizeof(Fornecedor));
+			for(x=0; x<iContF; x++){
+				strcpy(fornecedor[x].nomeFantasia, aux[x].nomeFantasia);
+				strcpy(fornecedor[x].endereco, aux[x].endereco);
+			}
+			//liberando memoria
+			free(aux);
+			iMaximo = iNovoMaximo;
+			recebeValorForn(fornecedor, &iContF);
 			retorno = escolha("fornecedor");
+			iContF++;
+			flush_in();
 		}
 	}while(retorno != 'n');
-
+	mostraFornecedor(fornecedor, &iContF);
 }
 
+int mostraFornecedor(Fornecedor *fornecedor, int *contador){
+	int x;
+	printf("\n\t********** FORNECEDORES **********\n");
+	for (x = 0; x < *contador; x++)
+	{
+		fornecedor[x].nomeFantasia[strcspn(fornecedor[x].nomeFantasia, "\n")] = '\0';
+		fornecedor[x].endereco[strcspn(fornecedor[x].endereco, "\n")] = '\0';
+		printf("Nome Fantasia: %s \t\t Endereco: %s\n", fornecedor[x].nomeFantasia, fornecedor[x].endereco);
+	}
+}
 
 char escolha(char *nome){
 	char cEscolha;
