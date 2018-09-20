@@ -12,19 +12,27 @@ typedef struct fornecedor{
 	char endereco[101];
 } Fornecedor;
 
+typedef struct cliente{
+	char nomeCli[101];
+	char cpf[15];
+} Cliente;
+
 int menu();
 
 /** voids **/
 void recebeValorProd(Produto *produto, int *iCont);
 void recebeValorForn(Fornecedor *fornecedor, int *contador);
+void recebeValorCli(Cliente *cliente, int *contador);
 
 /** cadastro **/
 int cadastroProduto();
 int cadastroFornecedor();
+int cadastroCliente();
 
 /** visualizacao de dados **/
 int mostraProduto(Produto *produto, int *contador);
 int mostraFornecedor(Fornecedor *fornecedor, int *contador);
+int mostraCliente(Cliente *cliente, int *contador);
 
 /** auxiliares **/
 char escolha(char *nome);
@@ -55,7 +63,8 @@ int menu()
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
 		//cadastroProduto();
-		cadastroFornecedor();
+		//cadastroFornecedor();
+		cadastroCliente();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -196,6 +205,59 @@ int mostraFornecedor(Fornecedor *fornecedor, int *contador){
 	}
 }
 
+/******************* FUNCOES PARA CADASTRO DE CLIENTE ********************/
+
+void recebeValorCli(Cliente *cliente, int *contador){
+	printf("Digite o nome do cliente: ");
+	fgets(cliente[*contador].nomeCli, sizeof(cliente[*contador].nomeCli), stdin);
+	printf("Digite o CPF do cliente: ");
+	fgets(cliente[*contador].cpf, sizeof(cliente[*contador].cpf), stdin);
+}
+
+int cadastroCliente(){
+	int iContCli = 0;
+	int iMaximo = 2;
+	int x;
+	char retorno;
+
+	Cliente *cliente = (Cliente*) malloc(iMaximo * sizeof(Cliente));
+
+	do{
+		if(iContCli < iMaximo){
+			recebeValorCli(cliente, &iContCli);
+			retorno = escolha("cliente");
+			iContCli++;
+			flush_in();
+		}else{
+			Cliente *aux = cliente;
+			int iNovoMaximo = iMaximo + 100;
+			cliente = (Cliente*) malloc(iNovoMaximo * sizeof(Cliente*));
+			for(x=0; x<iContCli; x++){
+				strcpy(cliente[x].nomeCli, aux[x].nomeCli);
+				strcpy(cliente[x].cpf, aux[x].cpf);
+			}
+			//liberando da memoria
+			free(aux);
+			iMaximo = iNovoMaximo;
+			recebeValorCli(cliente, &iContCli);
+			retorno = escolha("cliente");
+			iContCli++;
+			flush_in();
+		}
+	}while(retorno != 'n');
+	mostraCliente(cliente, &iContCli);
+}
+
+int mostraCliente(Cliente *cliente, int *contador){
+	int x;
+	printf("\n\t********** CLIENTES **********\n");
+	for(x=0; x<*contador; x++){
+		cliente[x].nomeCli[strcspn(cliente[x].nomeCli, "\n")] = '\0';
+		cliente[x].cpf[strcspn(cliente[x].cpf, "\n")] = '\0';
+		printf("Nome Cliente: %s \t\t CPF: %s\n", cliente[x].nomeCli, cliente[x].cpf);
+	}
+}
+
 char escolha(char *nome){
 	char cEscolha;
 	printf("Deseja cadastrar mais um %s? (s/n)", nome);
@@ -209,3 +271,27 @@ void flush_in(){
 	int ch;
 	while ((ch = fgetc(stdin)) != EOF && ch != '\n'){}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
