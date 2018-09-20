@@ -22,7 +22,7 @@ int main()
 
 int menu()
 {
-  
+
   int menu;
 
   printf("**Menu**\n\n");
@@ -51,12 +51,12 @@ int menu()
   }
 }
 
-void recebeValor(Produto *produto, int *iCont){
+void recebeValor(Produto *produto, int *iCont)
+{
   printf("Digite o nome do produto: ");
   fgets(produto[*iCont].nome, sizeof(produto[*iCont].nome), stdin);
   printf("Digite o valor do produto: ");
   scanf("%f", &produto[*iCont].valor);
-  //*iCont = *iCont + 1; //nao pode usar ++
 }
 
 //CADASTRA OS PRODUTOS
@@ -72,19 +72,22 @@ int cadastraProduto()
 
   char cEscolha;
 
-  do{
-    if(iCont < iMaximo){
+  do
+  {
+    if (iCont < iMaximo)
+    {
       recebeValor(produto, &iCont);
-      printf("Deseja cadastrar mais um produto? (s/n)");
+      printf("Deseja cadastrar mais um produto? (s/n)\n");
       scanf(" %c", &cEscolha);
+      iCont++;
       flush_in();
-      iCont = iCont + 1;
-    }else{
-      int iNovoMaximo = iMaximo + 100, x;
-      //variavel tipo produto auxiliar
-      Produto *aux = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
-      Produto *produto = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
-      aux = produto;
+    }
+    else
+    {
+      int iNovoMaximo = iMaximo + 100;
+      int x;
+      Produto *aux = produto;
+      produto = (Produto *)malloc(iNovoMaximo * sizeof(Produto));
       if (!produto && !aux)
       {
         printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
@@ -92,7 +95,8 @@ int cadastraProduto()
       };
       for (x = 0; x < iCont; x++)
       {
-        *produto[x].nome = *aux[x].nome;
+        strcpy(produto[x].nome, aux[x].nome);
+        produto[x].valor = aux[x].valor;
       }
       free(aux);
       iMaximo = iNovoMaximo;
@@ -100,10 +104,9 @@ int cadastraProduto()
       printf("Deseja cadastrar mais um produto? (s/n)");
       scanf(" %c", &cEscolha);
       flush_in();
-      iCont = iCont + 1;
+      iCont++;
     }
   } while (cEscolha != 'n');
-
   mostraProduto(produto, &iCont);
 }
 
@@ -118,14 +121,13 @@ int mostraProduto(Produto *produto, int *contador)
     produto[x].nome[strcspn(produto[x].nome, "\n")] = '\0';
     printf("%s\t %.2f\n", produto[x].nome, produto[x].valor);
   }
-  
 }
-
 
 //Limpa buffer do teclado
 void flush_in()
 {
   int ch;
-  while ((ch = fgetc(stdin)) != EOF && ch != '\n'){}
-  
+  while ((ch = fgetc(stdin)) != EOF && ch != '\n')
+  {
+  }
 }
