@@ -64,7 +64,7 @@ void recebeValor(Produto *produto, int *iCont)
 int cadastraProduto()
 {
 	//v. auxiliares
-	int iCont = 0, iMaximo = 2;
+	int iCont = 0, iMaximo = 100;
 	char cEscolha;
 	Produto *produto = (Produto *)malloc(iMaximo * sizeof(Produto));
 	if (!produto)
