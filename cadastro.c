@@ -13,13 +13,22 @@ typedef struct fornecedor{
 } Fornecedor;
 
 int menu();
-void flush_in();
-void recebeValor(Produto *produto, int *iCont);
-char escolha(char *nome);
-int cadastraProduto();
+
+/** voids **/
+void recebeValorProd(Produto *produto, int *iCont);
+void recebeValorForn(Fornecedor *fornecedor, int *contador);
+
+/** cadastro **/
+int cadastroProduto();
 int cadastroFornecedor();
+
+/** visualizacao de dados **/
 int mostraProduto(Produto *produto, int *contador);
 int mostraFornecedor(Fornecedor *fornecedor, int *contador);
+
+/** auxiliares **/
+char escolha(char *nome);
+void flush_in();
 
 int main()
 {
@@ -45,7 +54,7 @@ int menu()
 	case 1:
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
-		//cadastraProduto();
+		//cadastroProduto();
 		cadastroFornecedor();
 		break;
 	case 2:
@@ -60,7 +69,7 @@ int menu()
 }
 	/******************* FUNCOES PARA CADASTRO DE PRODUTOS ********************/
 //recebe valor dos produtos
-void recebeValor(Produto *produto, int *iCont)
+void recebeValorProd(Produto *produto, int *iCont)
 {
 	printf("Digite o nome do produto: ");
 	fgets(produto[*iCont].nome, sizeof(produto[*iCont].nome), stdin);
@@ -69,7 +78,7 @@ void recebeValor(Produto *produto, int *iCont)
 }
 
 //CADASTRA OS PRODUTOS
-int cadastraProduto()
+int cadastroProduto()
 {
 	//v. auxiliares
 	int iCont = 0, iMaximo = 100;
@@ -85,7 +94,7 @@ int cadastraProduto()
 	{
 		if (iCont < iMaximo)
 		{
-			recebeValor(produto, &iCont);
+			recebeValorProd(produto, &iCont);
 			retorno = escolha("produto");
 			iCont++;
 			flush_in();
@@ -108,10 +117,10 @@ int cadastraProduto()
 			}
 			free(aux);
 			iMaximo = iNovoMaximo;
-			recebeValor(produto, &iCont);
+			recebeValorProd(produto, &iCont);
 			retorno = escolha("produto");
-			flush_in();
 			iCont++;
+			flush_in();
 		}
 		
 	} while (retorno != 'n');
