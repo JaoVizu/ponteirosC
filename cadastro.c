@@ -55,9 +55,11 @@ void recebeValorFunc(Funcionario *funcionario, int *contador);
 void tiraNCliente(Cliente *cliente, int *cont);
 void tiraNProduto(Produto *produto, int *cont);
 void tiraNFornecedor(Fornecedor *fornecedor, int *cont);
+void tiraNFuncionario(Funcionario *funcionario, int *cont);
 void copiaCliente(Cliente *cliente, Cliente *aux, int *cont);
 void copiaProduto(Produto *produto, Produto *aux, int *cont);
 void copiaFornecedor(Fornecedor *fornecedor, Fornecedor *aux, int *cont);
+void copiaFuncionario(Funcionario *funcionario, Funcionario *aux, int *cont);
 
 /** cadastro **/
 int cadastroProduto();
@@ -100,9 +102,9 @@ int menu()
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
 		//cadastroProduto();
-		cadastroFornecedor();
+		//cadastroFornecedor();
 		//cadastroCliente();
-		//cadastroFuncionario();
+		cadastroFuncionario();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -183,9 +185,9 @@ int mostraProduto(Produto *produto, int *contador)
 	int x;
 	int cont = *contador;
 	printf("\n*** MOSTRANDO PRODUTOS ***\n");
-	tiraNProduto(produto, &cont);
 	for (x = 0; x < *contador; x++)
 	{
+		tiraNProduto(produto, &cont);
 		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome: %s\nValidade: %s\nValor: %.2f\n", produto[x].cNome,produto[x].cValidade,produto[x].fValor);
 		printf("Codigo Produto: %d\nCodigo Fornecedor: %d\n", produto[x].iCodigo, produto[x].iCodigoFornecedor);
@@ -288,9 +290,9 @@ int mostraFornecedor(Fornecedor *fornecedor, int *contador)
 	int x;
 	int cont = *contador;
 	printf("\n\t********** FORNECEDORES **********\n");
-	tiraNFornecedor(fornecedor, &cont);
 	for (x = 0; x < *contador; x++)
 	{
+		tiraNFornecedor(fornecedor, &cont);
 		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome: %s\nNome Fantasia: %s\nEndereco: %s\n", fornecedor[x].cNome,fornecedor[x].cNomeFantasia, fornecedor[x].cEndereco);
 		printf("CNPJ: %s\nEmail: %s\nTelefone: %s\n", fornecedor[x].cCnpj, fornecedor[x].cEmail,fornecedor[x].cTelefone);
@@ -447,12 +449,25 @@ void recebeValorFunc(Funcionario *funcionario, int *contador)
 	fgets(funcionario[*contador].cNomeFunc, sizeof(funcionario[*contador].cNomeFunc), stdin);
 	printf("Entre com o cargo do funcionario: ");
 	fgets(funcionario[*contador].cCargo, sizeof(funcionario[*contador].cCargo), stdin);
+	printf("Entre com o CPF do funcionario: ");
+	fgets(funcionario[*contador].cCpf, sizeof(funcionario[*contador].cCpf), stdin);
+	printf("Entre com a data de nascimento do funcionario: ");
+	fgets(funcionario[*contador].cData_nascimento, sizeof(funcionario[*contador].cData_nascimento), stdin);
+	printf("Entre com o email do funcionario: ");
+	fgets(funcionario[*contador].cEmail, sizeof(funcionario[*contador].cEmail), stdin);
+	printf("Entre com o telefone do funcionario: ");
+	fgets(funcionario[*contador].cTelefone, sizeof(funcionario[*contador].cTelefone), stdin);
+	printf("Entre com o celular do funcionario: ");
+	fgets(funcionario[*contador].cCelular, sizeof(funcionario[*contador].cCelular), stdin);
+	printf("Entre com o endereco do funcionario: ");
+	fgets(funcionario[*contador].cEndereco, sizeof(funcionario[*contador].cEndereco), stdin);
+	
 }
 
 int cadastroFuncionario()
 {
 	int iContFunc = 0;
-	int iMaximo = 100;
+	int iMaximo = 1;
 	int x;
 	char retorno;
 	//variavel do tipo funcionario
@@ -482,11 +497,7 @@ int cadastroFuncionario()
 				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 				return 1;
 			}
-			for (x = 0; x < iContFunc; x++)
-			{
-				strcpy(funcionario[x].cNomeFunc, aux[x].cNomeFunc);
-				strcpy(funcionario[x].cCargo, aux[x].cCargo);
-			}
+			copiaFuncionario(funcionario, aux, &iContFunc);
 			//libera da memoria
 			free(aux);
 			iMaximo = iNovoMaximo;
@@ -502,13 +513,45 @@ int cadastroFuncionario()
 int mostraFuncionario(Funcionario *funcionario, int *contador)
 {
 	int x;
+	int cont = *contador;
 	printf("\n\t********** FUNCIONARIOS **********\n");
 	for (x = 0; x < *contador; x++)
 	{
-		//retirar o \n do final e adiciona o caracter nulo
+		tiraNFuncionario(funcionario, &cont);
+		printf("--------------------------------------------------------------------------------\n");
+		printf("Nome Funcionario: %s\nCargo: %s\nCPF: %s\n", funcionario[x].cNomeFunc, funcionario[x].cCargo, funcionario[x].cCpf);
+		printf("Data Nascimento: %s\nEmail: %s\nTelefone: %s\n", funcionario[x].cData_nascimento, funcionario[x].cEmail, funcionario[x].cTelefone);
+		printf("Celular: %s\nEndereco: %s\n", funcionario[x].cCelular, funcionario[x].cEndereco);
+	}
+}
+
+//tira \n do final da string
+void tiraNFuncionario(Funcionario *funcionario, int *cont){
+	int x;
+	for(x=0; x<*cont; x++){
 		funcionario[x].cNomeFunc[strcspn(funcionario[x].cNomeFunc, "\n")] = '\0';
 		funcionario[x].cCargo[strcspn(funcionario[x].cCargo, "\n")] = '\0';
-		printf("Nome Funcionario: %s \t Cargo: %s\n", funcionario[x].cNomeFunc, funcionario[x].cCargo);
+		funcionario[x].cCpf[strcspn(funcionario[x].cCpf, "\n")] = '\0';
+		funcionario[x].cData_nascimento[strcspn(funcionario[x].cData_nascimento, "\n")] = '\0';
+		funcionario[x].cEmail[strcspn(funcionario[x].cEmail, "\n")] = '\0';
+		funcionario[x].cTelefone[strcspn(funcionario[x].cTelefone, "\n")] = '\0';
+		funcionario[x].cCelular[strcspn(funcionario[x].cCelular, "\n")] = '\0';
+		funcionario[x].cEndereco[strcspn(funcionario[x].cEndereco, "\n")] = '\0';
+	}
+}
+
+//aloca na memoria dinamica criada
+void copiaFuncionario(Funcionario *funcionario, Funcionario *aux, int *cont){
+	int x;
+	for(x=0; x< *cont; x++){
+		strcpy(funcionario[x].cNomeFunc, aux[x].cNomeFunc);
+		strcpy(funcionario[x].cCargo, aux[x].cCargo);
+		strcpy(funcionario[x].cCpf, aux[x].cCpf);
+		strcpy(funcionario[x].cData_nascimento, aux[x].cData_nascimento);
+		strcpy(funcionario[x].cEmail, aux[x].cEmail);
+		strcpy(funcionario[x].cTelefone, aux[x].cTelefone);
+		strcpy(funcionario[x].cCelular, aux[x].cCelular);
+		strcpy(funcionario[x].cEndereco, aux[x].cEndereco);
 	}
 }
 
