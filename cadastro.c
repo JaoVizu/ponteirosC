@@ -101,10 +101,10 @@ int menu()
 	case 1:
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
-		//cadastroProduto();
+		cadastroProduto();
 		//cadastroFornecedor();
 		//cadastroCliente();
-		cadastroFuncionario();
+		//cadastroFuncionario();
 		break;
 	case 2:
 		printf("\n Iniciando Caixa...\n");
@@ -136,7 +136,8 @@ void recebeValorProd(Produto *produto, int *iCont)
 int cadastroProduto()
 {
 	//v. auxiliares
-	int iCont = 0, iMaximo = 100;
+	int iMaximo = 1;
+	int iCont = 0;
 	char retorno;
 	Produto *produto = (Produto *)malloc(iMaximo * sizeof(Produto));
 	if (!produto)
@@ -182,6 +183,7 @@ int cadastroProduto()
 //MOSTRA OS PRODUTOS CADASTRADOS
 int mostraProduto(Produto *produto, int *contador)
 {
+	system("cls || clear");
 	int x;
 	int cont = *contador;
 	printf("\n*** MOSTRANDO PRODUTOS ***\n");
@@ -287,6 +289,7 @@ int cadastroFornecedor()
 
 int mostraFornecedor(Fornecedor *fornecedor, int *contador)
 {
+	system("cls || clear");
 	int x;
 	int cont = *contador;
 	printf("\n\t********** FORNECEDORES **********\n");
@@ -400,6 +403,7 @@ int cadastroCliente()
 
 int mostraCliente(Cliente *cliente, int *contador)
 {
+	system("cls || clear");
 	int x;
 	int cont = *contador;
 	printf("\n\t********** CLIENTES **********\n");
@@ -512,6 +516,7 @@ int cadastroFuncionario()
 
 int mostraFuncionario(Funcionario *funcionario, int *contador)
 {
+	system("cls || clear");
 	int x;
 	int cont = *contador;
 	printf("\n\t********** FUNCIONARIOS **********\n");
