@@ -53,6 +53,12 @@ void recebeValorForn(Fornecedor *fornecedor, int *contador);
 void recebeValorCli(Cliente *cliente, int *contador);
 void recebeValorFunc(Funcionario *funcionario, int *contador);
 void tiraNCliente(Cliente *cliente, int *cont);
+void tiraNProduto(Produto *produto, int *cont);
+void tiraNFornecedor(Fornecedor *fornecedor, int *cont);
+void copiaCliente(Cliente *cliente, Cliente *aux, int *cont);
+void copiaProduto(Produto *produto, Produto *aux, int *cont);
+void copiaFornecedor(Fornecedor *fornecedor, Fornecedor *aux, int *cont);
+
 /** cadastro **/
 int cadastroProduto();
 int cadastroFornecedor();
@@ -94,8 +100,8 @@ int menu()
 		printf("\n Iniciando Administrativo...\n");
 		system("cls || clear");
 		//cadastroProduto();
-		//cadastroFornecedor();
-		cadastroCliente();
+		cadastroFornecedor();
+		//cadastroCliente();
 		//cadastroFuncionario();
 		break;
 	case 2:
@@ -114,8 +120,14 @@ void recebeValorProd(Produto *produto, int *iCont)
 {
 	printf("Digite o nome do produto: ");
 	fgets(produto[*iCont].cNome, sizeof(produto[*iCont].cNome), stdin);
+	printf("Digite a validade do produto: ");
+	fgets(produto[*iCont].cValidade, sizeof(produto[*iCont].cValidade), stdin);
 	printf("Digite o valor do produto: ");
 	scanf("%f", &produto[*iCont].fValor);
+	printf("Digite o codigo do produto: ");
+	scanf("%d", &produto[*iCont].iCodigo);
+	printf("Digite o codigo do fornecedor: ");
+	scanf("%d", &produto[*iCont].iCodigoFornecedor);
 }
 
 //CADASTRA OS PRODUTOS
@@ -151,11 +163,8 @@ int cadastroProduto()
 				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 				return 1;
 			};
-			for (x = 0; x < iCont; x++)
-			{
-				strcpy(produto[x].cNome, aux[x].cNome);
-				produto[x].fValor = aux[x].fValor;
-			}
+		
+			copiaProduto(produto, aux, &iCont);
 			free(aux);
 			iMaximo = iNovoMaximo;
 			recebeValorProd(produto, &iCont);
@@ -172,12 +181,35 @@ int cadastroProduto()
 int mostraProduto(Produto *produto, int *contador)
 {
 	int x;
+	int cont = *contador;
 	printf("\n*** MOSTRANDO PRODUTOS ***\n");
-	printf("Nome \t\t Valor Unitario\n\n");
+	tiraNProduto(produto, &cont);
 	for (x = 0; x < *contador; x++)
 	{
+		printf("--------------------------------------------------------------------------------\n");
+		printf("Nome: %s\nValidade: %s\nValor: %.2f\n", produto[x].cNome,produto[x].cValidade,produto[x].fValor);
+		printf("Codigo Produto: %d\nCodigo Fornecedor: %d\n", produto[x].iCodigo, produto[x].iCodigoFornecedor);
+	}
+}
+
+//tira \n do final da string
+void tiraNProduto(Produto *produto, int *cont){
+	int x;
+	for(x=0; x < *cont; x++){
 		produto[x].cNome[strcspn(produto[x].cNome, "\n")] = '\0';
-		printf("%s\t %.2f\n", produto[x].cNome, produto[x].fValor);
+		produto[x].cValidade[strcspn(produto[x].cValidade, "\n")] = '\0';
+	}
+}
+
+//copia para a nova alocacao de memoria
+void copiaProduto(Produto *produto, Produto *aux, int *cont){
+	int x;
+	for(x=0; x < *cont; x++){
+		strcpy(produto[x].cNome, aux[x].cNome);
+		strcpy(produto[x].cValidade, aux[x].cValidade);
+		produto[x].fValor = aux[x].fValor;
+		produto[x].iCodigo = aux[x].iCodigo;
+		produto[x].iCodigoFornecedor = aux[x].iCodigoFornecedor;
 	}
 }
 
@@ -186,15 +218,27 @@ int mostraProduto(Produto *produto, int *contador)
 void recebeValorForn(Fornecedor *fornecedor, int *contador)
 {
 	printf("Digite o nome do Fornecedor: ");
+	fgets(fornecedor[*contador].cNome, sizeof(fornecedor[*contador].cNome), stdin);
+	printf("Digite o Nome Fantasia: ");
 	fgets(fornecedor[*contador].cNomeFantasia, sizeof(fornecedor[*contador].cNomeFantasia), stdin);
 	printf("Digite o endereco do fornecedor: ");
 	fgets(fornecedor[*contador].cEndereco, sizeof(fornecedor[*contador].cEndereco), stdin);
+	printf("Digite o CNPJ do fornecedor: ");
+	fgets(fornecedor[*contador].cCnpj, sizeof(fornecedor[*contador].cCnpj), stdin);
+	printf("Digite o email do fornecedor: ");
+	fgets(fornecedor[*contador].cEmail, sizeof(fornecedor[*contador].cEmail), stdin);
+	printf("Digite o telefone do fornecedor: ");
+	fgets(fornecedor[*contador].cTelefone, sizeof(fornecedor[*contador].cTelefone), stdin);
+	printf("Digite o celular do fornecedor: ");
+	fgets(fornecedor[*contador].cCelular, sizeof(fornecedor[*contador].cCelular), stdin);
+	printf("Digite o codigo do produto deste fornecedor: ");
+	scanf("%d", &fornecedor[*contador].iCodigoProduto);
 }
 
 int cadastroFornecedor()
 {
 	int iContF = 0;
-	int iMaximo = 100;
+	int iMaximo = 1;
 	int x;
 	char retorno;
 
@@ -226,11 +270,7 @@ int cadastroFornecedor()
 				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 				return 1;
 			}
-			for (x = 0; x < iContF; x++)
-			{
-				strcpy(fornecedor[x].cNomeFantasia, aux[x].cNomeFantasia);
-				strcpy(fornecedor[x].cEndereco, aux[x].cEndereco);
-			}
+			copiaFornecedor(fornecedor, aux, &iContF);
 			//liberando memoria
 			free(aux);
 			iMaximo = iNovoMaximo;
@@ -246,12 +286,43 @@ int cadastroFornecedor()
 int mostraFornecedor(Fornecedor *fornecedor, int *contador)
 {
 	int x;
+	int cont = *contador;
 	printf("\n\t********** FORNECEDORES **********\n");
+	tiraNFornecedor(fornecedor, &cont);
 	for (x = 0; x < *contador; x++)
 	{
+		printf("--------------------------------------------------------------------------------\n");
+		printf("Nome: %s\nNome Fantasia: %s\nEndereco: %s\n", fornecedor[x].cNome,fornecedor[x].cNomeFantasia, fornecedor[x].cEndereco);
+		printf("CNPJ: %s\nEmail: %s\nTelefone: %s\n", fornecedor[x].cCnpj, fornecedor[x].cEmail,fornecedor[x].cTelefone);
+		printf("Celular: %s\nCodigo Produto: %d\n", fornecedor[x].cCelular, fornecedor[x].iCodigoProduto);
+	}
+}
+
+//tira \n do final da string
+void tiraNFornecedor(Fornecedor *fornecedor, int *cont){
+	int x;
+	for(x=0; x < *cont; x++){
+		fornecedor[x].cNome[strcspn(fornecedor[x].cNome, "\n")] = '\0';
 		fornecedor[x].cNomeFantasia[strcspn(fornecedor[x].cNomeFantasia, "\n")] = '\0';
 		fornecedor[x].cEndereco[strcspn(fornecedor[x].cEndereco, "\n")] = '\0';
-		printf("Nome Fantasia: %s \t\t Endereco: %s\n", fornecedor[x].cNomeFantasia, fornecedor[x].cEndereco);
+		fornecedor[x].cCnpj[strcspn(fornecedor[x].cCnpj, "\n")] = '\0';
+		fornecedor[x].cEmail[strcspn(fornecedor[x].cEmail, "\n")] = '\0';
+		fornecedor[x].cTelefone[strcspn(fornecedor[x].cTelefone, "\n")] = '\0';
+		fornecedor[x].cCelular[strcspn(fornecedor[x].cCelular, "\n")] = '\0';
+	}
+}
+//copia para a nova alocacao de memoria
+void copiaFornecedor(Fornecedor *fornecedor, Fornecedor *aux, int *cont){
+	int x;
+	for(x=0; x<*cont;x++){
+		strcpy(fornecedor[x].cNome, aux[x].cNome);
+		strcpy(fornecedor[x].cNomeFantasia, aux[x].cNomeFantasia);
+		strcpy(fornecedor[x].cEndereco, aux[x].cEndereco);
+		strcpy(fornecedor[x].cCnpj, aux[x].cCnpj);
+		strcpy(fornecedor[x].cEmail, aux[x].cEmail);
+		strcpy(fornecedor[x].cTelefone, aux[x].cTelefone);
+		strcpy(fornecedor[x].cCelular, aux[x].cCelular);
+		fornecedor[x].iCodigoProduto = aux[x].iCodigoProduto;
 	}
 }
 
@@ -301,6 +372,7 @@ int cadastroCliente()
 		else
 		{
 			printf("Entrando no else\n");
+			printf("Maximo = %d\n\n", iMaximo);
 			Cliente *aux = cliente;
 			int iNovoMaximo = iMaximo + 100;
 			cliente = (Cliente *)malloc(iNovoMaximo * sizeof(Cliente *));
@@ -309,19 +381,12 @@ int cadastroCliente()
 				printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
 				return 1;
 			}
-			for (x = 0; x < iContCli; x++)
-			{
-				strcpy(cliente[x].cNomeCli, aux[x].cNomeCli);
-				strcpy(cliente[x].cData_nascimento, aux[x].cData_nascimento);
-				strcpy(cliente[x].cCpf, aux[x].cCpf);
-				strcpy(cliente[x].cEmail, aux[x].cEmail);
-				strcpy(cliente[x].cTelefone, aux[x].cTelefone);
-				strcpy(cliente[x].cCelular, aux[x].cCelular);
-				strcpy(cliente[x].cEndereco, aux[x].cEndereco);
-			}
+			//faz a troca do auxiliar para a nova alocacao de cliente
+			copiaCliente(cliente, aux, &iContCli);
 			//liberando da memoria
 			free(aux);
 			iMaximo = iNovoMaximo;
+			printf("Maximo novo %d\n\n", iMaximo);
 			recebeValorCli(cliente, &iContCli);
 			retorno = escolha("cliente");
 			iContCli++;
@@ -339,6 +404,7 @@ int mostraCliente(Cliente *cliente, int *contador)
 	for (x = 0; x < *contador; x++)
 	{
 		tiraNCliente(cliente, &cont);
+		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome Cliente: %s\nCPF: %s\nData Nascimento: %s\n", cliente[x].cNomeCli, cliente[x].cCpf, cliente[x].cData_nascimento);
 		printf("Endereco: %s\nTelefone: %s\nCelular: %s\n", cliente[x].cEndereco, cliente[x].cTelefone, cliente[x].cCelular);
 		printf("Email: %s\n", cliente[x].cEmail);
@@ -358,6 +424,19 @@ void tiraNCliente(Cliente *cliente, int *cont)
 		cliente[x].cData_nascimento[strcspn(cliente[x].cData_nascimento, "\n")] = '\0';
 		cliente[x].cTelefone[strcspn(cliente[x].cTelefone, "\n")] = '\0';
 		cliente[x].cCelular[strcspn(cliente[x].cCelular, "\n")] = '\0';
+	}
+}
+//copia os dados para a nova alocacao de memoria
+void copiaCliente(Cliente *cliente, Cliente *aux,int *cont){
+	int x;
+	for(x=0; x<*cont; x++){
+		strcpy(cliente[x].cNomeCli, aux[x].cNomeCli);
+		strcpy(cliente[x].cData_nascimento, aux[x].cData_nascimento);
+		strcpy(cliente[x].cCpf, aux[x].cCpf);
+		strcpy(cliente[x].cEmail, aux[x].cEmail);
+		strcpy(cliente[x].cTelefone, aux[x].cTelefone);
+		strcpy(cliente[x].cCelular, aux[x].cCelular);
+		strcpy(cliente[x].cEndereco, aux[x].cEndereco);
 	}
 }
 
