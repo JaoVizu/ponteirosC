@@ -61,11 +61,18 @@ void copiaProduto(Produto *produto, Produto *aux, int *cont);
 void copiaFornecedor(Fornecedor *fornecedor, Fornecedor *aux, int *cont);
 void copiaFuncionario(Funcionario *funcionario, Funcionario *aux, int *cont);
 
+/** menu **/
+int menuPrincipal();
+int menuCadastro();
+
 /** cadastro **/
 int cadastroProduto();
 int cadastroFornecedor();
 int cadastroCliente();
 int cadastroFuncionario();
+
+/** alteracao **/
+int alteraProduto(Produto *produto, char *nomeP, int *cont);
 
 /** visualizacao de dados **/
 int mostraProduto(Produto *produto, int *contador);
@@ -77,6 +84,10 @@ int mostraFuncionario(Funcionario *funcionario, int *contador);
 char escolha(char *nome);
 void flush_in();
 
+Produto *produto;
+Fornecedor *fornecedor;
+
+
 int main()
 {
 	menu();
@@ -85,36 +96,93 @@ int main()
 
 int menu()
 {
+	int op;
+	do{
+		system("cls || clear");
+		op = menuPrincipal();
+		flush_in();
 
-	int menu;
+		switch (op)
+		{
+		case 0:
+			printf("Obrigado por utilizar o software!!\n");
+			break;
+		case 1:
+			system("cls || clear");
+			menuCadastro();
+			break;
+		case 2:
+			printf("\n Iniciando Caixa...\n");
+			break;
+		case 3:
+			printf("\n Iniciando Estoque...\n");
+			break;
+		default:
+			printf("\n Opcao invalida...\n");
+		}
+	}while(op != 0);
+}
 
+int menuPrincipal(){
+	int op;
 	printf("**Menu**\n\n");
-	printf(" 1-> Administrativo\n");
+	printf(" 1-> Cadastrar\n");
 	printf(" 2-> Caixa\n");
 	printf(" 3-> Estoque\n");
 	printf("\n Escolha a opcao desejada: ");
-	scanf("%d", &menu);
-	flush_in();
+	scanf("%d", &op);
+	return op;
+}
 
-	switch (menu)
-	{
-	case 1:
-		printf("\n Iniciando Administrativo...\n");
-		system("cls || clear");
-		cadastroProduto();
-		//cadastroFornecedor();
-		//cadastroCliente();
-		//cadastroFuncionario();
-		break;
-	case 2:
-		printf("\n Iniciando Caixa...\n");
-		break;
-	case 3:
-		printf("\n Iniciando Estoque...\n");
-		break;
-	default:
-		printf("\n Opcao invalida...\n");
-	}
+int menuCadastro(){
+	system("cls || clear");
+	int op;
+	do{
+		printf("0 -> Voltar\n");
+		printf("1 -> Cadastrar Produto\n");
+		printf("2 -> Cadastrar Fornecedor\n");
+		printf("3 -> Cadastrar Cliente\n");
+		printf("4 -> Cadastrar Funcionario\n");
+		printf("Escolha uma opcao: ");
+		scanf("%d", &op);
+		flush_in();
+		switch(op){
+			case 0:
+			break;
+			case 1:
+				system("cls || clear");
+				int iMax = 1;
+				produto = (Produto*) malloc(iMax * sizeof(Produto));
+				if(!produto){
+					printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+					return 1;
+				}
+				cadastroProduto(produto, &iMax);
+				break;
+			case 2:
+				system("cls || clear");
+				fornecedor = (Fornecedor *)malloc(iMax * sizeof(Fornecedor));
+				if (!fornecedor)
+				{
+					printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+					return 1;
+				}
+				cadastroFornecedor(fornecedor, &iMax);
+				break;
+			case 3:
+				system("cls || clear");
+				cadastroCliente();
+				break;
+			case 4:
+				system("cls || clear");
+				cadastroFuncionario();
+				break;
+			default:
+				system("cls || clear");
+				printf("Entre com uma opcao valida!!!\n");
+				break;
+		}
+	}while(op != 0);
 }
 /******************* FUNCOES PARA CADASTRO DE PRODUTOS ********************/
 //recebe valor dos produtos
@@ -133,19 +201,13 @@ void recebeValorProd(Produto *produto, int *iCont)
 }
 
 //CADASTRA OS PRODUTOS
-int cadastroProduto()
+int cadastroProduto(Produto *produto, int *max)
 {
 	//v. auxiliares
-	int iMaximo = 1;
+	int iMaximo = *max;
 	int iCont = 0;
 	char retorno;
-	Produto *produto = (Produto *)malloc(iMaximo * sizeof(Produto));
-	if (!produto)
-	{
-		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
-		return 1;
-	}
-
+	
 	do
 	{
 		if (iCont < iMaximo)
@@ -178,6 +240,8 @@ int cadastroProduto()
 
 	} while (retorno != 'n');
 	mostraProduto(produto, &iCont);
+	
+	alteraProduto(produto, "Joao", &iCont);
 }
 
 //MOSTRA OS PRODUTOS CADASTRADOS
@@ -217,6 +281,22 @@ void copiaProduto(Produto *produto, Produto *aux, int *cont){
 	}
 }
 
+int alteraProduto(Produto *produto, char *nomeP, int *cont){
+	int x;
+	//int nao_encontrado = 0;
+
+	for(x=0; x<*cont; x++){
+		if(strcmp(nomeP, produto[x].cNome) == 0){
+			printf("Pode ser alterado\n\n");
+		}else{
+			printf("Nao existe esse cadastro\n");
+			return 1;
+		}
+	}
+	return 0;
+
+}
+
 /******************* FUNCOES PARA CADASTRO DE FORNECEDOR ********************/
 
 void recebeValorForn(Fornecedor *fornecedor, int *contador)
@@ -239,21 +319,13 @@ void recebeValorForn(Fornecedor *fornecedor, int *contador)
 	scanf("%d", &fornecedor[*contador].iCodigoProduto);
 }
 
-int cadastroFornecedor()
+int cadastroFornecedor(Fornecedor *fornecedor, int *max)
 {
 	int iContF = 0;
 	int iMaximo = 1;
 	int x;
 	char retorno;
-
-	//fazer variavel do tipo fornecedor
-	Fornecedor *fornecedor = (Fornecedor *)malloc(iMaximo * sizeof(Fornecedor));
-	if (!fornecedor)
-	{
-		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
-		return 1;
-	}
-
+	
 	do
 	{
 		//se ultrapassar o limite maximo de cadastro, ira alocar dinamico
@@ -399,6 +471,7 @@ int cadastroCliente()
 		}
 	} while (retorno != 'n');
 	mostraCliente(cliente, &iContCli);
+	
 }
 
 int mostraCliente(Cliente *cliente, int *contador)
@@ -410,10 +483,10 @@ int mostraCliente(Cliente *cliente, int *contador)
 	for (x = 0; x < *contador; x++)
 	{
 		tiraNCliente(cliente, &cont);
-		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome Cliente: %s\nCPF: %s\nData Nascimento: %s\n", cliente[x].cNomeCli, cliente[x].cCpf, cliente[x].cData_nascimento);
 		printf("Endereco: %s\nTelefone: %s\nCelular: %s\n", cliente[x].cEndereco, cliente[x].cTelefone, cliente[x].cCelular);
 		printf("Email: %s\n", cliente[x].cEmail);
+		printf("--------------------------------------------------------------------------------\n");
 	}
 }
 
