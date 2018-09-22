@@ -132,6 +132,7 @@ int menuPrincipal(){
 	printf(" 3-> Estoque\n");
 	printf("\n Escolha a opcao desejada: ");
 	scanf("%d", &op);
+	flush_in();
 	return op;
 }
 
@@ -296,7 +297,6 @@ void copiaProduto(Produto *produto, Produto *aux, int *cont){
 
 int alteraProduto(Produto *produto, char *nomeP, int *cont){
 	int x;
-	//int nao_encontrado = 0;
 
 	for(x=0; x<*cont; x++){
 		if(strcmp(nomeP, produto[x].cNome) == 0){
@@ -428,12 +428,13 @@ void recebeValorCli(Cliente *cliente, int *contador)
 	fgets(cliente[*contador].cData_nascimento, sizeof(cliente[*contador].cData_nascimento), stdin);
 	printf("Digite o email do cliente: ");
 	fgets(cliente[*contador].cEmail, sizeof(cliente[*contador].cEmail), stdin);
-	printf("Digite o endereco do cliente: ");
-	fgets(cliente[*contador].cEndereco, sizeof(cliente[*contador].cEndereco), stdin);
 	printf("Digite o telefone do cliente: ");
 	fgets(cliente[*contador].cTelefone, sizeof(cliente[*contador].cTelefone), stdin);
 	printf("Digite o celular do cliente: ");
 	fgets(cliente[*contador].cCelular, sizeof(cliente[*contador].cCelular), stdin);
+	printf("Digite o endereco do cliente: ");
+	fgets(cliente[*contador].cEndereco, sizeof(cliente[*contador].cEndereco), stdin);
+	
 }
 
 int cadastroCliente(Cliente *cliente, int *max)
@@ -504,11 +505,11 @@ void tiraNCliente(Cliente *cliente, int *cont)
 	{
 		cliente[x].cNomeCli[strcspn(cliente[x].cNomeCli, "\n")] = '\0';
 		cliente[x].cCpf[strcspn(cliente[x].cCpf, "\n")] = '\0';
-		cliente[x].cEndereco[strcspn(cliente[x].cEndereco, "\n")] = '\0';
-		cliente[x].cEmail[strcspn(cliente[x].cEmail, "\n")] = '\0';
 		cliente[x].cData_nascimento[strcspn(cliente[x].cData_nascimento, "\n")] = '\0';
+		cliente[x].cEmail[strcspn(cliente[x].cEmail, "\n")] = '\0';
 		cliente[x].cTelefone[strcspn(cliente[x].cTelefone, "\n")] = '\0';
 		cliente[x].cCelular[strcspn(cliente[x].cCelular, "\n")] = '\0';
+		cliente[x].cEndereco[strcspn(cliente[x].cEndereco, "\n")] = '\0';
 	}
 }
 //copia os dados para a nova alocacao de memoria
@@ -516,8 +517,8 @@ void copiaCliente(Cliente *cliente, Cliente *aux,int *cont){
 	int x;
 	for(x=0; x<*cont; x++){
 		strcpy(cliente[x].cNomeCli, aux[x].cNomeCli);
-		strcpy(cliente[x].cData_nascimento, aux[x].cData_nascimento);
 		strcpy(cliente[x].cCpf, aux[x].cCpf);
+		strcpy(cliente[x].cData_nascimento, aux[x].cData_nascimento);
 		strcpy(cliente[x].cEmail, aux[x].cEmail);
 		strcpy(cliente[x].cTelefone, aux[x].cTelefone);
 		strcpy(cliente[x].cCelular, aux[x].cCelular);
