@@ -66,10 +66,10 @@ int menuPrincipal();
 int menuCadastro();
 
 /** cadastro **/
-int cadastroProduto();
-int cadastroFornecedor();
-int cadastroCliente();
-int cadastroFuncionario();
+int cadastroProduto(Produto *produto, int *max);
+int cadastroFornecedor(Fornecedor *fornecedor, int *max);
+int cadastroCliente(Cliente *cliente, int *max);
+int cadastroFuncionario(Funcionario *funcionario, int *max);
 
 /** alteracao **/
 int alteraProduto(Produto *produto, char *nomeP, int *cont);
@@ -86,7 +86,8 @@ void flush_in();
 
 Produto *produto;
 Fornecedor *fornecedor;
-
+Cliente *cliente;
+Funcionario *funcionario;
 
 int main()
 {
@@ -171,11 +172,23 @@ int menuCadastro(){
 				break;
 			case 3:
 				system("cls || clear");
-				cadastroCliente();
+				cliente = (Cliente *)malloc(iMax * sizeof(Cliente));
+				if (!cliente)
+				{
+					printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+					return 1;
+				}
+				cadastroCliente(cliente, &iMax);
 				break;
 			case 4:
 				system("cls || clear");
-				cadastroFuncionario();
+				funcionario = (Funcionario *)malloc(iMax * sizeof(Funcionario));
+				if (!funcionario)
+				{
+					printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
+					return 1;
+				}
+				cadastroFuncionario(funcionario, &iMax);
 				break;
 			default:
 				system("cls || clear");
@@ -254,9 +267,9 @@ int mostraProduto(Produto *produto, int *contador)
 	for (x = 0; x < *contador; x++)
 	{
 		tiraNProduto(produto, &cont);
-		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome: %s\nValidade: %s\nValor: %.2f\n", produto[x].cNome,produto[x].cValidade,produto[x].fValor);
 		printf("Codigo Produto: %d\nCodigo Fornecedor: %d\n", produto[x].iCodigo, produto[x].iCodigoFornecedor);
+		printf("--------------------------------------------------------------------------------\n");
 	}
 }
 
@@ -322,7 +335,7 @@ void recebeValorForn(Fornecedor *fornecedor, int *contador)
 int cadastroFornecedor(Fornecedor *fornecedor, int *max)
 {
 	int iContF = 0;
-	int iMaximo = 1;
+	int iMaximo = *max;
 	int x;
 	char retorno;
 	
@@ -368,10 +381,10 @@ int mostraFornecedor(Fornecedor *fornecedor, int *contador)
 	for (x = 0; x < *contador; x++)
 	{
 		tiraNFornecedor(fornecedor, &cont);
-		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome: %s\nNome Fantasia: %s\nEndereco: %s\n", fornecedor[x].cNome,fornecedor[x].cNomeFantasia, fornecedor[x].cEndereco);
 		printf("CNPJ: %s\nEmail: %s\nTelefone: %s\n", fornecedor[x].cCnpj, fornecedor[x].cEmail,fornecedor[x].cTelefone);
 		printf("Celular: %s\nCodigo Produto: %d\n", fornecedor[x].cCelular, fornecedor[x].iCodigoProduto);
+		printf("--------------------------------------------------------------------------------\n");
 	}
 }
 
@@ -423,19 +436,12 @@ void recebeValorCli(Cliente *cliente, int *contador)
 	fgets(cliente[*contador].cCelular, sizeof(cliente[*contador].cCelular), stdin);
 }
 
-int cadastroCliente()
+int cadastroCliente(Cliente *cliente, int *max)
 {
 	int iContCli = 0;
-	int iMaximo = 1;
+	int iMaximo = *max;
 	int x;
 	char retorno;
-
-	Cliente *cliente = (Cliente *)malloc(iMaximo * sizeof(Cliente));
-	if (!cliente)
-	{
-		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
-		return 1;
-	}
 
 	do
 	{
@@ -541,19 +547,12 @@ void recebeValorFunc(Funcionario *funcionario, int *contador)
 	
 }
 
-int cadastroFuncionario()
+int cadastroFuncionario(Funcionario *funcionario, int *max)
 {
 	int iContFunc = 0;
-	int iMaximo = 1;
+	int iMaximo = *max;
 	int x;
 	char retorno;
-	//variavel do tipo funcionario
-	Funcionario *funcionario = (Funcionario *)malloc(iMaximo * sizeof(Funcionario));
-	if (!funcionario)
-	{
-		printf("Erro na alocacao de memoria! Contate o desenvolvedor do sistema!!\n");
-		return 1;
-	}
 
 	do
 	{
@@ -596,10 +595,10 @@ int mostraFuncionario(Funcionario *funcionario, int *contador)
 	for (x = 0; x < *contador; x++)
 	{
 		tiraNFuncionario(funcionario, &cont);
-		printf("--------------------------------------------------------------------------------\n");
 		printf("Nome Funcionario: %s\nCargo: %s\nCPF: %s\n", funcionario[x].cNomeFunc, funcionario[x].cCargo, funcionario[x].cCpf);
 		printf("Data Nascimento: %s\nEmail: %s\nTelefone: %s\n", funcionario[x].cData_nascimento, funcionario[x].cEmail, funcionario[x].cTelefone);
 		printf("Celular: %s\nEndereco: %s\n", funcionario[x].cCelular, funcionario[x].cEndereco);
+		printf("--------------------------------------------------------------------------------\n");
 	}
 }
 
