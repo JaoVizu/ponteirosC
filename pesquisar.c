@@ -46,7 +46,6 @@ int main()
 				nome[strcspn(nome, "\n")] = '\0';
 				pesquisaProduto(produto, &cont, nome);
 				free(nome);
-				flush_in();
 				break;
 			default:
 				printf("Entre com uma opcao valida !! \n");
@@ -93,8 +92,6 @@ int pesquisaProduto(Produto *produto, int *cont, char *nome){
 		
 		if(strcmp(nome, produto[x].nome) == 0){
 			printf("Tem o produto!!\n");
-		}else {
-			return naoTem;
 		}
 	}
 }
